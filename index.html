@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>NV2 Production Order Viewer</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:20px;
+    background:#f5f6fa;
+}
+
+h1{
+    color:#2f3640;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+input{
+    padding:10px;
+    width:250px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+button{
+    padding:10px 20px;
+    background:#0078D4;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#0078D4;
+    color:white;
+    padding:8px;
+    position:sticky;
+    top:0;
+}
+
+td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:left;
+}
+
+tr:nth-child(even){
+    background:#f2f2f2;
+}
+</style>
+</head>
+
+<body>
+
+<h1>NV2 Production Order Search</h1>
+
+<div class="search-box">
+    <input type="text" id="poSearch" placeholder="Production Order Number">
+    <input type="text" id="batchSearch" placeholder="New Build-As Batch">
+    <button onclick="searchData()">검색</button>
+</div>
+
+<table id="resultTable">
+<thead>
+<tr>
+<th>Release Date</th>
+<th>Production Order Number</th>
+<th>Quantity</th>
+<th>Routing</th>
+<th>Build-As Part</th>
+<th>Old Batch</th>
+<th>New Batch</th>
+<th>PO</th>
+<th>Ship To</th>
+<th>Substrate</th>
+<th>Bridge PN</th>
+<th>Bridge Batches</th>
+<th>Bridge Qty</th>
+<th>Lot Priority</th>
+<th>Assy Build Instruction</th>
+<th>Die Revision</th>
+<th>Instruction 2</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script>
+
+const data = [
+
+{
+releaseDate:"08/16/2026",
+productionOrder:"8045057",
+qty:"205",
+routing:"ASSY#SHIP",
+buildAsPart:"ASTB500-SM822-8MAZ",
+oldBatch:"E3P420.S0V",
+newBatch:"E3P420.S0V",
+po:"73818806",
+shipTo:"KYTF",
+substrate:"480-4218-BN4H-1S2",
+bridgePn:"TB500SM",
+bridgeBatches:"E3P823.M0P~E3P864.M0P#UMU764.M0V",
+bridgeQty:"407~413#205",
+lotPriority:"STANDARD",
+assyBuild:"ASTB500-SM822-8MAZ_3_0",
+dieRevision:"A1",
+instruction2:"TB500.INT159#22;23;24/TB500.INT004#1;2;3;4;5"
+},
+
+{
+releaseDate:"08/16/2026",
+productionOrder:"8045059",
+qty:"201",
+routing:"ASSY#SHIP",
+buildAsPart:"ASTB500-SM822-8MAZ",
+oldBatch:"E3P566.C0V",
+newBatch:"E3P566.C0V",
+po:"73818809",
+shipTo:"KYTF",
+substrate:"480-4218-BN4H-1S2",
+bridgePn:"TB500SM",
+bridgeBatches:"E3P864.M0P#UMY435.M0V",
+bridgeQty:"804#201",
+lotPriority:"STANDARD",
+assyBuild:"ASTB500-SM822-8MAZ_3_0",
+dieRevision:"A1",
+instruction2:"TB500.INT004#6;7;8;9;10;11;12;13"
+},
+
+{
+releaseDate:"08/16/2026",
+productionOrder:"8045061",
+qty:"189",
+routing:"ASSY#SHIP",
+buildAsPart:"ASTB500-SM822-8MAZ",
+oldBatch:"E3U390.C0V",
+newBatch:"E3U390.C0V",
+po:"73818811",
+shipTo:"KYTF",
+substrate:"480-4218-BN4H-1S2",
+bridgePn:"TB500SM",
+bridgeBatches:"E3P864.M0P#UMU770.S0V~UMY435.M0V",
+bridgeQty:"756#60~129",
+lotPriority:"STANDARD",
+assyBuild:"ASTB500-SM822-8MAZ_3_0",
+dieRevision:"A1",
+instruction2:"TB500.INT004#14;15;16;17;18;19;20;21"
+}
+
+];
+
+function renderTable(rows){
+    const tbody=document.querySelector("#resultTable tbody");
+    tbody.innerHTML="";
+
+    rows.forEach(r=>{
+        tbody.innerHTML+=`
+        <tr>
+        <td>${r.releaseDate}</td>
+        <td>${r.productionOrder}</td>
+        <td>${r.qty}</td>
+        <td>${r.routing}</td>
+        <td>${r.buildAsPart}</td>
+        <td>${r.oldBatch}</td>
+        <td>${r.newBatch}</td>
+        <td>${r.po}</td>
+        <td>${r.shipTo}</td>
+        <td>${r.substrate}</td>
+        <td>${r.bridgePn}</td>
+        <td>${r.bridgeBatches}</td>
+        <td>${r.bridgeQty}</td>
+        <td>${r.lotPriority}</td>
+        <td>${r.assyBuild}</td>
+        <td>${r.dieRevision}</td>
+        <td>${r.instruction2}</td>
+        </tr>
+        `;
+    });
+}
+
+function searchData(){
+
+    const po=document.getElementById("poSearch").value.toLowerCase();
+    const batch=document.getElementById("batchSearch").value.toLowerCase();
+
+    const result=data.filter(r =>
+        r.productionOrder.toLowerCase().includes(po)
+        &&
+        r.newBatch.toLowerCase().includes(batch)
+    );
+
+    renderTable(result);
+}
+
+renderTable(data);
+
+</script>
+
+</body>
+</html>
